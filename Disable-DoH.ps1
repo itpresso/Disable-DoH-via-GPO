@@ -40,4 +40,10 @@ if (Test-Path $operaShortcutPath) {
     $shortcut.Save()
 }
 
-Write-EventLog -LogName Application -Source "Application" -EntryType Information -EventId 1000 -Message "DoH disabled via GPO script"
+# Optional: Write to Event Log for confirmation
+if (-not (Get-EventLog -LogName Application -Source "Disable-DoH-GPO" -ErrorAction SilentlyContinue)) {
+    New-EventLog -LogName Application -Source "Disable-DoH-GPO" -ErrorAction SilentlyContinue
+}
+Write-EventLog -LogName Application -Source "Disable-DoH-GPO" -EntryType Information -EventId 1001 -Message "DoH disabled via GPO script on $(hostname) at $(Get-Date)"
+
+Write-Output "[Done] DoH disabled in Chrome, Edge, Firefox, and Opera."
